@@ -65,9 +65,6 @@ public class ProductAdapter implements ProductGateway {
         productById.setEnabled(productUpdated.isEnabled());
         productById.setMin(productUpdated.getMin());
         productById.setMax(productUpdated.getMax());
-        System.out.println("si pasa por estos lados esto y que hace: " + productById.getName());
-        System.out.println(productById.isEnabled());
-        System.out.println(productById.getInInventory());
 
         return productRepository.save(Mapper.map(productById, ProductEntity.class))
                 .map(productEntity -> Mapper.map(productEntity, Products.class));
