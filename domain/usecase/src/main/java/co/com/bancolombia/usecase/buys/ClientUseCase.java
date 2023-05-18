@@ -10,7 +10,9 @@ import reactor.core.publisher.Mono;
 public class ClientUseCase {
     private final ClientGateway buyGateway;
     public Mono<Client> createdClient(CompraRequest compraRequest){
-
         return buyGateway.createdClient(compraRequest);
+    }
+    public Mono<Client> findClientById(Integer id){
+        return buyGateway.findClientById(id);
     }
 }

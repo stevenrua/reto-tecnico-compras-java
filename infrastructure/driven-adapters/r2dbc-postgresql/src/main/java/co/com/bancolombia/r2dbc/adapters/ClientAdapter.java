@@ -2,15 +2,14 @@ package co.com.bancolombia.r2dbc.adapters;
 
 import co.com.bancolombia.model.Client;
 import co.com.bancolombia.model.DetailsBuy;
-import co.com.bancolombia.model.Products;
 import co.com.bancolombia.model.dto.CompraRequest;
-import co.com.bancolombia.model.dto.compraDTO;
 import co.com.bancolombia.r2dbc.mapper.Mapper;
 import co.com.bancolombia.r2dbc.repositories.buy.ClientRepository;
 import co.com.bancolombia.r2dbc.repositories.buy.entities.ClientEntity;
-import co.com.bancolombia.r2dbc.repositories.product.ProductRepository;
+import co.com.bancolombia.usecase.buys.ClientUseCase;
 import co.com.bancolombia.usecase.buys.gateway.ClientGateway;
 import co.com.bancolombia.usecase.details.DetailUseCase;
+import co.com.bancolombia.usecase.details.gateway.DetailGateway;
 import co.com.bancolombia.usecase.products.ProductsUseCase;
 import co.com.bancolombia.usecase.products.gateway.ProductGateway;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ClientAdapter implements ClientGateway {
     private final ClientRepository clientRepository;
-    private final ProductsUseCase productsUseCase;
-    private final DetailUseCase detailUseCase;
+    private final ProductGateway productsGateway;
+    private final DetailGateway detailGateway;
     @Override
     public Mono<Client> createdClient(CompraRequest compraRequest) {
         Client client = Client.builder()
@@ -35,26 +34,34 @@ public class ClientAdapter implements ClientGateway {
         Mono<Client> cliente = clientRepository.save(Mapper.map(client, ClientEntity.class))
                 .map(clientEntity -> Mapper.map(clientEntity, Client.class));
 
-        Flux.fromIterable(compraRequest.getCompra())
-                .flatMap(compraDTO -> productsUseCase.finById(compraDTO.getIdProduct())
-                        .flatMap(product -> {
-                            Integer inInventory = product.getInInventory() - compraDTO.getQuantity();
-                            if(inInventory > product.getMin()){
-                                product.setInInventory(inInventory);
-                                return productsUseCase.updatedProduct(product, product).flatMap(products -> {
-                                    DetailsBuy detailsBuy = DetailsBuy
-                                            .builder()
-                                            .buyId(1)
-                                            .productId(products.getId())
-                                            .quantity(compraDTO.getQuantity())
-                                            .build();
-                                    System.out.println(products.getInInventory());
-                                    return detailUseCase.createdDetail(detailsBuy);
-                                });
-                            }
-                            return Mono.empty();
-                        })).subscribe();
+        return cliente.flatMap(savedClient -> {
+            Flux<DetailsBuy> detailsBuyFlux = Flux.fromIterable(compraRequest.getCompra())
+                    .flatMap(compraDTO -> productsGateway.findById(compraDTO.getIdProduct())
+                            .flatMap(product -> {
+                                Integer inInventory = product.getInInventory() - compraDTO.getQuantity();
+                                if (inInventory > product.getMin()) {
+                                    product.setInInventory(inInventory);
+                                    return productsGateway.updatedProduct(product, product)
+                                            .flatMap(updatedProduct -> {
+                                                DetailsBuy detailsBuy = DetailsBuy.builder()
+                                                        .buyId(savedClient.getId())
+                                                        .productId(updatedProduct.getId())
+                                                        .quantity(compraDTO.getQuantity())
+                                                        .build();
+                                                return detailGateway.createdDetail(detailsBuy);
+                                            });
+                                }
+                                return Mono.empty();
+                            }));
 
-        return cliente;
+            return detailsBuyFlux.then(Mono.just(savedClient));
+        });
     }
+
+    @Override
+    public Mono<Client> findClientById(Integer id) {
+        return clientRepository.findById(id)
+                .map(clientEntity -> Mapper.map(clientEntity, Client.class));
+    }
+
 }

@@ -5,14 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompraRequest {
+public class HistorialDTO {
     private Client client;
-    private List<compraDTO> compra;
-
+    private List<ProductResponse> products;
 }
