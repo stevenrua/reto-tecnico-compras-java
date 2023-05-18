@@ -19,8 +19,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class DetailAdapter implements DetailGateway {
     private final DetailRepository detailRepository;
-    private final ClientGateway clientGateway;
-    private final ProductGateway productGateway;
+    //private final ClientGateway clientGateway;
+    //private final ProductGateway productGateway;
     @Override
     public Mono<DetailsBuy> createdDetail(DetailsBuy detailsBuy) {
         return detailRepository.save(Mapper.map(detailsBuy, DetailEntity.class))
@@ -32,7 +32,7 @@ public class DetailAdapter implements DetailGateway {
         return detailRepository.findByBuyId(idbuy);
     }
 
-    @Override
+    /*@Override
     public Mono<HistorialDTO> Historial(Integer idBuy) {
         //findDetailById(idBuy);
         return findDetailById(idBuy)
@@ -49,5 +49,5 @@ public class DetailAdapter implements DetailGateway {
                         return historialDTO;
                     });
                 });
-    }
+    }*/
 }

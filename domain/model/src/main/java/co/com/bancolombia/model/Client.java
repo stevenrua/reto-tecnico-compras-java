@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Date;
 public class Client {
     private Integer id;
     private Integer identity;
-    private Date date;
+    private Timestamp date;
     private String idType;
     private String clientName;
 }

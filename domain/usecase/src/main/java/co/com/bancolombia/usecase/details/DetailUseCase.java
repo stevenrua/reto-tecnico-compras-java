@@ -15,10 +15,11 @@ public class DetailUseCase {
         return detailGateway.createdDetail(detailBuy);
     }
     public Flux<DetailsBuy> findDetailById(Integer idBuy){
+        System.out.println("llega hasta aquí bien");
         return detailGateway.findDetailById(idBuy);
     }
 
-    public Mono<HistorialDTO> Historial(Integer idBuy){
+    /*public Mono<HistorialDTO> Historial(Integer idBuy){
         return detailGateway.Historial(idBuy);
-    }
+    }*/
 }

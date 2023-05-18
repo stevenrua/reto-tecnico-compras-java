@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ClientEntity {
     @Id
     private Integer id;
     private Integer identity;
-    private Date date;
+    private Timestamp date;
     @Column(value = "idtype")
     private String idType;
     @Column(value = "clientname")
