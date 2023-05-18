@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "2f980c67-ff1e-4ef0-9b33-6c6ff909d345",
+		"name": "compras",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26024616",
+		"_collection_link": "https://lunar-space-848051.postman.co/workspace/Team-Workspace~e6938eab-8036-4aa8-8f2b-beb22b3275d8/collection/26024616-2f980c67-ff1e-4ef0-9b33-6c6ff909d345?action=share&creator=26024616&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "productos",
+			"item": [
+				{
+					"name": "listarproductos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscarproductoporid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"celular\",\r\n    \"inInventory\": 234,\r\n    \"enabled\": true,\r\n    \"min\": 8,\r\n    \"max\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crearproducto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"celular\",\r\n    \"inInventory\": 234,\r\n    \"enabled\": true,\r\n    \"min\": 8,\r\n    \"max\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actualizarproducto",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "borrarproducto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscarproductopornombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/pornombre/celularIphone",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"pornombre",
+								"celularIphone"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Compras",
+			"item": [
+				{
+					"name": "crearcompra",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"client\": {\r\n        \"identity\": 1234,\r\n        \"date\": \"2023-05-04\",\r\n        \"idType\": \"CC\",\r\n        \"clientName\": \"Edward Yesid\"\r\n    },\r\n    \"compra\": [\r\n        {\r\n            \"idProduct\": 70,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"idProduct\": 71,\r\n            \"quantity\": 12\r\n        },\r\n        {\r\n            \"idProduct\": 72,\r\n            \"quantity\": 12\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/buy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"buy"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "detalles",
+			"item": [
+				{
+					"name": "creardetalle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"buyId\": 1,\r\n    \"productId\": 1,\r\n    \"quantity\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscarhistorial",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
