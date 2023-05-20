@@ -1,10 +1,8 @@
 package co.com.bancolombia.api.controllers;
-
 import co.com.bancolombia.model.Products;
 import co.com.bancolombia.r2dbc.helpers.CustomException;
 import co.com.bancolombia.usecase.products.ProductsUseCase;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(value = "/product")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -49,14 +48,6 @@ public class ProductController {
                     System.out.println("Error: " + err.getCause().getMessage());
                     return Mono.error(new CustomException(err.getMessage()));
                 });
-        /*return productsUseCase.finByName(updatedProduct.getName())
-                .onErrorResume(error-> Mono.error(new CustomException(error.getMessage())))
-                .flatMap(productFindById -> {
-                    Integer enInventario = productFindById.getInInventory() + updatedProduct.getInInventory();
-                    updatedProduct.setInInventory(enInventario);
-                    return productsUseCase.updatedProduct(productFindById, updatedProduct);
-                })
-                .switchIfEmpty(Mono.defer(()-> productsUseCase.createdProduct(updatedProduct)));*/
     }
 
     @PutMapping("/{id}")
@@ -81,7 +72,7 @@ public class ProductController {
     }
     @ExceptionHandler(CustomException.class)
     public Mono<ResponseEntity<String>> handleCustomException(CustomException ex) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = HttpStatus.CONFLICT;
         String body = "Error: " + ex.getMessage();
         return Mono.just(ResponseEntity.status(status).body(body))
                 .onErrorResume(e -> Mono.error(new CustomException(e.getMessage())));

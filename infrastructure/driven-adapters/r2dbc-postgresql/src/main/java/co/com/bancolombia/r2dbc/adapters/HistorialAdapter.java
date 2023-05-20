@@ -32,7 +32,7 @@ public class HistorialAdapter implements HistorialGateway {
                         .map(product -> {
                             ProductResponse productResponse = new ProductResponse();
                             productResponse.setNombreProducto(product.getName());
-                            productResponse.setQuantiy(detailsBuy.getQuantity());
+                            productResponse.setQuantity(detailsBuy.getQuantity());
                             return productResponse;
                         })
                 )

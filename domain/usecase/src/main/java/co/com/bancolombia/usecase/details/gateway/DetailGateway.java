@@ -7,5 +7,6 @@ import reactor.core.publisher.Mono;
 public interface DetailGateway {
     Mono<DetailsBuy> createdDetail(DetailsBuy detailsBuy);
     Flux<DetailsBuy> findDetailById(Integer idbuy);
-    //Mono<HistorialDTO> Historial(Integer idBuy);
+    Flux<DetailsBuy> findAllDetails();
+    
 }

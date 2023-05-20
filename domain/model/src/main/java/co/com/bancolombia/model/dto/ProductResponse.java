@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductResponse {
     private String nombreProducto;
-    private Integer quantiy;
+    private Integer quantity;
 }

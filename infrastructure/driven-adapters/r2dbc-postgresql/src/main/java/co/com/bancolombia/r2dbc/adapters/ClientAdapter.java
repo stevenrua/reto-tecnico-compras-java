@@ -6,16 +6,17 @@ import co.com.bancolombia.model.dto.CompraRequest;
 import co.com.bancolombia.r2dbc.mapper.Mapper;
 import co.com.bancolombia.r2dbc.repositories.buy.ClientRepository;
 import co.com.bancolombia.r2dbc.repositories.buy.entities.ClientEntity;
-import co.com.bancolombia.usecase.buys.ClientUseCase;
 import co.com.bancolombia.usecase.buys.gateway.ClientGateway;
-import co.com.bancolombia.usecase.details.DetailUseCase;
 import co.com.bancolombia.usecase.details.gateway.DetailGateway;
-import co.com.bancolombia.usecase.products.ProductsUseCase;
 import co.com.bancolombia.usecase.products.gateway.ProductGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class ClientAdapter implements ClientGateway {
     private final DetailGateway detailGateway;
     @Override
     public Mono<Client> createdClient(CompraRequest compraRequest) {
+        compraRequest.getClient().setDate(LocalDateTime.now());
         Client client = Client.builder()
                 .clientName(compraRequest.getClient().getClientName())
                 .identity(compraRequest.getClient().getIdentity())
@@ -39,7 +41,7 @@ public class ClientAdapter implements ClientGateway {
                     .flatMap(compraDTO -> productsGateway.findById(compraDTO.getIdProduct())
                             .flatMap(product -> {
                                 Integer inInventory = product.getInInventory() - compraDTO.getQuantity();
-                                if (inInventory > product.getMin()) {
+                                if (inInventory >= product.getMin()) {
                                     product.setInInventory(inInventory);
                                     return productsGateway.updatedProduct(product, product)
                                             .flatMap(updatedProduct -> {
@@ -51,7 +53,7 @@ public class ClientAdapter implements ClientGateway {
                                                 return detailGateway.createdDetail(detailsBuy);
                                             });
                                 }
-                                return Mono.empty();
+                                return Mono.error(new Throwable("El inventario está abajo del minimo"));
                             }));
 
             return detailsBuyFlux.then(Mono.just(savedClient));
